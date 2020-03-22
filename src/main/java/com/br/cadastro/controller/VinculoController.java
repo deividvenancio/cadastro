@@ -27,7 +27,7 @@ public class VinculoController {
         JsonErrors errors = validarUsuarioAndProduct(vinculo.getIdUsuario(), vinculo.getProductName());
 
         if (errors.isHasError()) {
-            return JsonResponse.error(errors);
+//            return JsonResponse.error(errors);
         }
 
         checkVinculoAnterior(vinculo.getIdUsuario(), vinculo.getProductName());
@@ -41,10 +41,7 @@ public class VinculoController {
 
     @RequestMapping(value = "/vinculo/usuario/{idUsuario}", method = RequestMethod.GET)
     public JsonResponse listVinculosByUsuario(@PathVariable("idUsuario") String id) {
-        JsonErrors errors = Beans.validarLongValue(id);
-        if (errors.isHasError()) {
-            return JsonResponse.error(errors);
-        }
+        Beans.validarLongValue(id);
 
         return JsonResponse.ok(vinculoService.listByUsuario(Long.parseLong(id)));
     }
@@ -71,13 +68,13 @@ public class VinculoController {
         JSONObject jsonObject = new JSONObject();
 
         Products products = productsService.findByName(productName);
-        Usuario usuario = usuarioService.findById(usuarioId);
+        Optional<Usuario> usuario = usuarioService.findById(usuarioId);
 
         if (products == null) {
             jsonObject.put("productId", "Produto não encontrado");
         }
 
-        if (usuario == null) {
+        if (!usuario.isPresent()) {
             jsonObject.put("usuarioId", "Usuario não encontrado");
         }
 

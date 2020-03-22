@@ -1,5 +1,6 @@
 package com.br.cadastro.util;
 
+import com.br.cadastro.exceptions.ValidationException;
 import com.br.cadastro.model.JsonErrors;
 
 public class Beans {
@@ -9,7 +10,7 @@ public class Beans {
             Long.parseLong(valor);
             return true;
         } catch (NumberFormatException n) {
-            return false;
+            throw new ValidationException("O valor {0}, não é um numero valido", valor);
         }
     }
 
@@ -22,10 +23,10 @@ public class Beans {
     }
 
     public static JsonErrors validarLongValue(String value) {
-        if (!isLong(value)) {
-            return new JsonErrors(true, "o valor informado não é um long valido");
-        } else {
+        if (isLong(value)) {
             return new JsonErrors(false, "");
         }
+
+        return null;
     }
 }
